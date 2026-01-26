@@ -1,4 +1,3 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbwJvnsDf7tfmZEZKmmMpll_NfCVopBTCPGT4UBtI3mDMKM-AxkBe6P8HIKeNkXVThY/exec";
 requireRole("kurir");
 
 const user = JSON.parse(localStorage.getItem("user"));
