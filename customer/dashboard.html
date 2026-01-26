@@ -1,0 +1,17 @@
+<script src="../js/auth.js"></script>
+<script src="../js/order.js"></script>
+<script>requireRole("customer")</script>
+
+<h2>Dashboard Customer</h2>
+
+<form id="orderForm" onsubmit="createOrder(event)">
+  <input id="nama" placeholder="Nama Pemesan" required><br>
+  <input id="hp" placeholder="No HP" required><br>
+  <textarea id="pickup" placeholder="Alamat Pengambilan" required></textarea><br>
+  <textarea id="tujuan" placeholder="Alamat Tujuan / pengiriman" required></textarea><br>
+  <textarea id="catatan" placeholder="Catatan secara rinci (Pesanan anda)"></textarea><br>
+  <button type="submit">Buat Order</button>
+</form>
+
+<br>
+<button onclick="logout()">Logout</button>
