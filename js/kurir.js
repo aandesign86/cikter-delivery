@@ -93,3 +93,22 @@ function ambilOrder(resi){
   });
 }
 
+
+function selesaikanOrder(resi){
+  if(!confirm("Selesaikan order ini?")) return;
+
+  fetch(API_URL + "?" + new URLSearchParams({
+    action: "selesaikanOrder",
+    resi: resi
+  }))
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.status !== "ok"){
+      alert("❌ Gagal menyelesaikan order");
+      return;
+    }
+
+    alert("✅ Order selesai");
+    loadOrderSaya();
+  });
+}
