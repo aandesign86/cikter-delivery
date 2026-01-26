@@ -3,69 +3,93 @@ requireRole("kurir");
 const user = JSON.parse(localStorage.getItem("user"));
 const box = document.getElementById("orders");
 
-function loadOrders(){
-  box.innerHTML = "Loading...";
+function loadOrderSaya(){
+  const user = JSON.parse(localStorage.getItem("user"));
+  const list = document.getElementById("list");
 
-  const url = API_URL + "?action=listNewOrders";
+  fetch(API_URL + "?" + new URLSearchParams({
+    action: "getOrderSaya",
+    kurir_id: user.id
+  }))
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.status !== "ok"){
+      list.innerHTML = "❌ Gagal load order";
+      return;
+    }
 
-  fetch(url)
-    .then(r => r.text())
-    .then(txt => {
-      console.log("RAW:", txt);
+    if(res.data.length === 0){
+      list.innerHTML = "📭 Belum ada order";
+      return;
+    }
 
-      let res;
-      try{
-        res = JSON.parse(txt);
-      }catch(e){
-        box.innerHTML = "Response bukan JSON";
-        return;
-      }
-
-      if(res.status !== "ok"){
-        box.innerHTML = "Gagal load order: " + res.status;
-        return;
-      }
-
-      if(res.data.length === 0){
-        box.innerHTML = "Tidak ada order baru";
-        return;
-      }
-
-      box.innerHTML = "";
-      res.data.forEach(o=>{
-        box.innerHTML += `
-          <div style="border:1px solid #ccc;padding:10px;margin:10px">
-            <b>${o.resi}</b><br>
-            👤 ${o.nama} (${o.hp})<br>
-            📍 ${o.pickup} ➜ ${o.tujuan}<br>
-            <button onclick="ambilOrder('${o.resi}')">
-              Ambil Order
-            </button>
-          </div>
-        `;
-      });
-    })
-    .catch(err=>{
-      box.innerHTML = "Fetch error";
-      console.error(err);
-    });
+    list.innerHTML = res.data.map(o=>`
+      <div style="border:1px solid #ccc;padding:10px;margin:10px">
+        <b>${o.resi}</b><br>
+        Dari: ${o.pickup}<br>
+        Ke: ${o.tujuan}<br>
+        Status: ${o.status}
+      </div>
+    `).join("");
+  });
 }
 
+
+
+function loadOrderBaru(){
+  const list = document.getElementById("list");
+
+  fetch(API_URL + "?" + new URLSearchParams({
+    action: "getOrderBaru"
+  }))
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.status !== "ok"){
+      list.innerHTML = "❌ Gagal load order";
+      return;
+    }
+
+    if(res.data.length === 0){
+      list.innerHTML = "📭 Tidak ada order baru";
+      return;
+    }
+
+    list.innerHTML = res.data.map(o=>`
+      <div class="card">
+        <b>${o.resi}</b><br>
+        Pemesan: ${o.nama}<br>
+        HP: ${o.hp}<br>
+        Pickup: ${o.pickup}<br>
+        Tujuan: ${o.tujuan}<br>
+        <button onclick="ambilOrder('${o.resi}')">
+          Ambil Order
+        </button>
+      </div>
+    `).join("");
+  });
+}
+
+
 function ambilOrder(resi){
-  const params = new URLSearchParams({
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  if(!confirm("Ambil order ini?")) return;
+
+  fetch(API_URL + "?" + new URLSearchParams({
     action: "ambilOrder",
     resi: resi,
     kurir_id: user.id,
-    kurir_nama: user.nama,
-    kurir_hp: user.hp
-  });
+    nama_kurir: user.nama
+  }))
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.status !== "ok"){
+      alert("❌ Gagal ambil order");
+      return;
+    }
 
-  fetch(API_URL + "?" + params.toString())
-    .then(r => r.json())
-    .then(res => {
-      alert(res.msg);
-      loadOrders();
-    });
+    alert("✅ Order berhasil diambil");
+    loadOrderBaru();
+  });
 }
 
-loadOrders();
