@@ -2,9 +2,9 @@ function createOrder(e){
   e.preventDefault();
   console.log("✅ createOrder terpanggil");
 
+  // pastikan API_URL ada (dari auth.js)
   if (typeof API_URL === "undefined") {
     alert("❌ API_URL tidak terbaca");
-    console.error("API_URL undefined");
     return;
   }
 
@@ -13,6 +13,7 @@ function createOrder(e){
 
   if(!user){
     alert("❌ User belum login");
+    location.href = "../auth/login.html";
     return;
   }
 
@@ -28,37 +29,26 @@ function createOrder(e){
 
   console.log("DATA DIKIRIM:", data);
 
-  fetch(API_URL,{
-    method: "POST",
-    body: JSON.stringify(data)
-  })
-  .then(r => {
-    console.log("RESPONSE RAW:", r);
-    return r.text();   // ⬅️ PENTING
-  })
-  .then(txt => {
-    console.log("RESPONSE TEXT:", txt);
+  // 👉 UBAH KE GET
+  const params = new URLSearchParams(data).toString();
 
-    let res;
-    try {
-      res = JSON.parse(txt);
-    } catch(e){
-      alert("❌ Response bukan JSON");
-      return;
-    }
+  fetch(API_URL + "?" + params)
+    .then(r => r.json())
+    .then(res => {
+      console.log("RESPONSE JSON:", res);
 
-    if(res.status !== "ok"){
-      alert("❌ Gagal: " + (res.msg || "unknown"));
-      return;
-    }
+      if(res.status !== "ok"){
+        alert("❌ Gagal: " + (res.msg || "unknown"));
+        return;
+      }
 
-    alert("✅ ORDER BERHASIL\n\nResi:\n" + res.resi);
+      alert("✅ ORDER BERHASIL\n\nResi:\n" + res.resi);
 
-    // RESET FORM
-    document.getElementById("orderForm").reset();
-  })
-  .catch(err => {
-    alert("❌ Fetch error");
-    console.error(err);
-  });
+      // reset form
+      document.getElementById("orderForm").reset();
+    })
+    .catch(err => {
+      alert("❌ Fetch error");
+      console.error(err);
+    });
 }
