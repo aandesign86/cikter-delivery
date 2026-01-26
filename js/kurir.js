@@ -29,6 +29,10 @@ function loadOrderSaya(){
         Dari: ${o.pickup}<br>
         Ke: ${o.tujuan}<br>
         Status: ${o.status}
+        <button onclick="selesaikanOrder('${o.resi}')">
+          Selesaikan Order
+        </button>
+
       </div>
     `).join("");
   });
