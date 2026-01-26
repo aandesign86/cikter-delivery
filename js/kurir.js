@@ -6,11 +6,23 @@ const box = document.getElementById("orders");
 function loadOrders(){
   box.innerHTML = "Loading...";
 
-  fetch(API_URL + "?action=listNewOrders")
-    .then(r => r.json())
-    .then(res => {
+  const url = API_URL + "?action=listNewOrders";
+
+  fetch(url)
+    .then(r => r.text())
+    .then(txt => {
+      console.log("RAW:", txt);
+
+      let res;
+      try{
+        res = JSON.parse(txt);
+      }catch(e){
+        box.innerHTML = "Response bukan JSON";
+        return;
+      }
+
       if(res.status !== "ok"){
-        box.innerHTML = "Gagal load order";
+        box.innerHTML = "Gagal load order: " + res.status;
         return;
       }
 
@@ -20,19 +32,22 @@ function loadOrders(){
       }
 
       box.innerHTML = "";
-      res.data.forEach(o => {
+      res.data.forEach(o=>{
         box.innerHTML += `
           <div style="border:1px solid #ccc;padding:10px;margin:10px">
             <b>${o.resi}</b><br>
             👤 ${o.nama} (${o.hp})<br>
             📍 ${o.pickup} ➜ ${o.tujuan}<br>
-            📝 ${o.catatan}<br><br>
             <button onclick="ambilOrder('${o.resi}')">
               Ambil Order
             </button>
           </div>
         `;
       });
+    })
+    .catch(err=>{
+      box.innerHTML = "Fetch error";
+      console.error(err);
     });
 }
 
