@@ -10,21 +10,24 @@ function register(e){
     hp: document.getElementById("hp").value,
     email: document.getElementById("email").value,
     password: document.getElementById("password").value,
-    role: document.getElementById("role").value,
-    pin: Math.floor(1000 + Math.random() * 9000).toString()
+    role: document.getElementById("role").value
   };
 
   fetch(API_URL + "?" + new URLSearchParams(data))
     .then(r => r.json())
     .then(res => {
       if(res.status === "ok"){
-        showModal("Registrasi berhasil, silakan login");
-        setTimeout(() => location.href = "login.html", 1500);
+        showModal(
+          res.msg || "Registrasi berhasil, silakan login"
+        );
+        setTimeout(() => {
+          location.href = "login.html";
+        }, 1500);
       }else{
         showModal(res.msg || "Registrasi gagal");
       }
     })
-    .catch(() => showModal("❌ Koneksi gagal"));
+    .catch(() => showModal("❌ Koneksi ke server gagal"));
 }
 
 /* ================= LOGIN ================= */
@@ -33,8 +36,8 @@ function login(e){
 
   const data = {
     action: "login",
-    email: document.getElementById("email")?.value || "",
-    password: document.getElementById("password")?.value || ""
+    email: document.getElementById("email").value,
+    password: document.getElementById("password").value
   };
 
   fetch(API_URL + "?" + new URLSearchParams(data))
@@ -43,14 +46,14 @@ function login(e){
 
       if(res.status === "blocked"){
         showModal(
-          "Akun kurir belum aktif. Silakan gabung grup WhatsApp untuk verifikasi akun.",
+          "Akun kurir belum aktif.<br>Silakan gabung grup WhatsApp untuk verifikasi.",
           "https://chat.whatsapp.com/HFrhrJbxJJwDTxNPhNTQsH"
         );
         return;
       }
 
       if(res.status !== "ok"){
-        showModal(res.msg || "Login gagal");
+        showModal(res.msg || "Email atau password salah");
         return;
       }
 
@@ -64,7 +67,7 @@ function login(e){
         location.href = "../admin/index.html";
       }
     })
-    .catch(() => showModal("❌ Koneksi gagal"));
+    .catch(() => showModal("❌ Koneksi ke server gagal"));
 }
 
 /* ================= ROLE GUARD ================= */
