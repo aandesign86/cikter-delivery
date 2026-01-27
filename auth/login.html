@@ -8,147 +8,13 @@
 <!-- Google Material Icons -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 
-<script src="../js/auth.js"></script>
+<link rel="stylesheet" href="css/style.css"> <!-- kalau ada CSS eksternal -->
+<script src="js/auth.js"></script>
 
-<style>
-* {
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
-body {
-  background: linear-gradient(180deg, #000000, #1a1a1a);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-/* CARD */
-.login-card {
-  background: white;
-  padding: 30px;
-  width: 100%;
-  max-width: 380px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-/* TITLE */
-.login-card h2 {
-  text-align: center;
-  margin-bottom: 25px;
-  color: #ff5722;
-}
-
-/* INPUT */
-.login-card input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-}
-
-/* PASSWORD */
-.password-wrapper {
-  position: relative;
-}
-
-.password-wrapper input {
-  padding-right: 42px;
-}
-
-.toggle-password {
-  position: absolute;
-  right: 12px;
-  top: 35%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 22px;
-  color: #777;
-}
-
-.toggle-password:hover {
-  color: #ff5722;
-}
-
-/* BUTTON */
-.login-card button {
-  width: 100%;
-  padding: 12px;
-  background: #ff5722;
-  border: none;
-  border-radius: 6px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 15px;
-}
-
-.login-card button:hover {
-  background: #e64a19;
-}
-
-/* FOOTER */
-.login-footer {
-  text-align: center;
-  margin-top: 15px;
-  font-size: 14px;
-}
-
-.login-footer a {
-  color: #ff5722;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.modal-box {
-  background: #fff;
-  padding: 22px;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 320px;
-  text-align: center;
-}
-
-.modal-box p {
-  font-size: 14px;
-  margin-bottom: 15px;
-}
-
-.modal-box a {
-  display: none;
-  margin-bottom: 15px;
-  color: #25D366;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-.modal-box button {
-  background: #ff5722;
-  color: #fff;
-  border: none;
-  padding: 8px 18px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-  
-</style>
 </head>
-<!-- MODAL POPUP -->
+<body>
+
+<!-- MODAL UMUM -->
 <div id="modal" class="modal">
   <div class="modal-box">
     <p id="modal-text"></p>
@@ -161,100 +27,28 @@ body {
 <div id="resetModal" class="modal">
   <div class="modal-box">
     <p>Masukkan email terdaftar</p>
-    <input id="resetEmail" type="email" placeholder="Email" style="width:100%;padding:10px;margin-bottom:12px">
+    <input id="resetEmail" type="email" placeholder="Email">
     <button onclick="requestReset()">Kirim Link Reset</button>
+    <button onclick="closeReset()" style="background:#777;margin-top:5px;">Batal</button>
   </div>
 </div>
-<script>
-function openReset(){
-  document.getElementById("resetModal").style.display = "flex";
-}
-
-function closeReset(){
-  document.getElementById("resetModal").style.display = "none";
-}
-
-function requestReset(){
-  const email = document.getElementById("resetEmail").value;
-  if(!email){
-    showModal("Email wajib diisi");
-    return;
-  }
-
-  fetch(API_URL + "?action=requestReset&email=" + encodeURIComponent(email))
-    .then(r => r.json())
-    .then(res => {
-      closeReset();
-      showModal(res.msg || "Jika email terdaftar, link reset akan dikirim");
-    })
-    .catch(() => {
-      closeReset();
-      showModal("Gagal menghubungi server");
-    });
-}
-</script>
-
-
-<body>
 
 <div class="login-card">
   <h2>Login</h2>
-
   <form onsubmit="login(event)">
     <input id="email" placeholder="Email" required>
-
     <div class="password-wrapper">
       <input id="password" type="password" placeholder="Password" required>
-      <span class="toggle-password material-icons-outlined" onclick="togglePassword()">
-        visibility
-      </span>
+      <span class="toggle-password material-icons-outlined" onclick="togglePassword()">visibility</span>
     </div>
-
     <button type="submit">Login</button>
   </form>
 
   <div class="login-footer">
-  Belum punya akun? <a href="register.html">Daftar</a><br>
-  <a href="#" onclick="openReset()">Lupa Password?</a>
+    Belum punya akun? <a href="register.html">Daftar</a><br>
+    <a href="#" onclick="openReset()">Lupa Password?</a>
+  </div>
 </div>
-
-</div>
-
-<script>
-function togglePassword() {
-  const input = document.getElementById('password');
-  const icon = document.querySelector('.toggle-password');
-
-  if (input.type === 'password') {
-    input.type = 'text';
-    icon.textContent = 'visibility_off';
-  } else {
-    input.type = 'password';
-    icon.textContent = 'visibility';
-  }
-}
-</script>
-
-  <script>
-function showModal(text, link = null) {
-  document.getElementById("modal-text").innerText = text;
-
-  const a = document.getElementById("modal-link");
-  if (link) {
-    a.href = link;
-    a.style.display = "inline-block";
-  } else {
-    a.style.display = "none";
-  }
-
-  document.getElementById("modal").style.display = "flex";
-}
-
-function closeModal() {
-  document.getElementById("modal").style.display = "none";
-}
-</script>
-
 
 </body>
 </html>
