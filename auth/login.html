@@ -54,33 +54,24 @@ body {
 /* PASSWORD */
 .password-wrapper {
   position: relative;
-  width: 100%;
 }
 
 .password-wrapper input {
-  width: 100%;
-  padding-right: 44px;
+  padding-right: 42px;
 }
 
 .toggle-password {
   position: absolute;
   right: 12px;
-  top: 50%;
+  top: 35%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: #757575;
   font-size: 22px;
+  color: #777;
 }
 
 .toggle-password:hover {
   color: #ff5722;
-}
-
-.error-box {
-  margin: 12px 0;
-  font-size: 14px;
-  color: #d32f2f;
-  text-align: center;
 }
 
 /* BUTTON */
@@ -121,22 +112,17 @@ body {
   <h2>Login</h2>
 
   <form onsubmit="login(event)">
-  <input id="email" placeholder="Email" required>
+    <input id="email" placeholder="Email" required>
 
-  <div class="password-wrapper">
-    <input id="password" type="password" placeholder="Password" required>
-    <span class="toggle-password material-icons-outlined"
-          onclick="togglePassword()">
-      visibility
-    </span>
-  </div>
+    <div class="password-wrapper">
+      <input id="password" type="password" placeholder="Password" required>
+      <span class="toggle-password material-icons-outlined" onclick="togglePassword()">
+        visibility
+      </span>
+    </div>
 
-  <!-- PESAN ERROR / INFO -->
-  <div id="error" class="error-box"></div>
-
-  <button type="submit">Login</button>
-</form>
-
+    <button type="submit">Login</button>
+  </form>
 
   <div class="login-footer">
     Belum punya akun? <a href="register.html">Daftar</a>
@@ -155,17 +141,7 @@ function togglePassword() {
     input.type = 'password';
     icon.textContent = 'visibility';
   }
-  if(res.status === "blocked"){
-  document.getElementById("error").innerHTML = `
-    ${res.msg}<br>
-    <a href="${res.wa}" target="_blank" style="color:#25D366;font-weight:bold;">
-      👉 Gabung Grup WhatsApp
-    </a>
-  `;
-  }
-
 }
-
 </script>
 
 </body>
