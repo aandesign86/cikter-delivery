@@ -83,3 +83,26 @@ function logout(){
   localStorage.removeItem("user");
   location.href = "../auth/login.html";
 }
+
+/* ================= RESET PASSWORD ================= */
+function requestReset(){
+  const email = document.getElementById("resetEmail").value;
+  if(!email){
+    showModal("Email wajib diisi");
+    return;
+  }
+
+  fetch(API_URL + "?action=requestReset&email=" + encodeURIComponent(email))
+    .then(r => r.json())
+    .then(res => {
+      closeReset();
+      showModal(res.msg || "Jika email terdaftar, link reset akan dikirim");
+    })
+    .catch(err => {
+      console.error(err);
+      closeReset();
+      showModal("Gagal menghubungi server");
+    });
+}
+
+
