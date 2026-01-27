@@ -1,25 +1,136 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Register</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | CIKTER DELIVERY</title>
   <script src="../js/auth.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #000000, #1a1a1a);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+    }
+
+    .card {
+      background: #fff;
+      width: 100%;
+      max-width: 380px;
+      padding: 30px 25px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      animation: fadeUp 0.5s ease;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #ff5722;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.3s;
+    }
+
+    input:focus, select:focus {
+      border-color: #ff5722;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #ff5722;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #e64a19;
+    }
+
+    .back {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .back a {
+      color: #ff5722;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .back a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+	
+	.label-role {
+	  display: block;
+	  margin-bottom: 6px;
+	  font-size: 13px;
+	  font-weight: bold;
+	  color: #555;
+	}
+
+  </style>
 </head>
+
 <body>
-<h2>Registrasi</h2>
 
-<form onsubmit="register(event)">
-  <input id="nama" placeholder="Nama" required><br>
-  <input id="hp" placeholder="No HP" required><br>
-  <input id="email" placeholder="Email" required><br>
-  <input id="password" type="password" placeholder="Password" required><br>
+  <div class="card">
+    <h2>Registrasi</h2>
 
-  <select id="role">
-    <option value="customer">Customer</option>
-    <option value="kurir">Kurir</option>
-  </select><br><br>
+    <form onsubmit="register(event)">
+      <input id="nama" placeholder="Nama Lengkap" required>
+      <input id="hp" placeholder="No HP" required>
+      <input id="email" placeholder="Email" required>
+      <input id="password" type="password" placeholder="Password" required>
 
-  <button>Daftar</button>
-</form>
+	<label class="label-role">Pilih daftar sebagai Customer atau Kurir</label>
+	<select id="role">
+	  <option value="customer">Customer</option>
+	  <option value="kurir">Kurir</option>
+	</select>
+
+      <button type="submit">Daftar</button>
+    </form>
+
+    <div class="back">
+      <a href="../index.html">← Kembali ke Beranda</a>
+    </div>
+  </div>
 
 </body>
 </html>
