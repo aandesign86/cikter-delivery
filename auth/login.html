@@ -157,6 +157,44 @@ body {
   </div>
 </div>
 
+<!-- RESET PASSWORD POPUP -->
+<div id="resetModal" class="modal">
+  <div class="modal-box">
+    <p>Masukkan email terdaftar</p>
+    <input id="resetEmail" type="email" placeholder="Email" style="width:100%;padding:10px;margin-bottom:12px">
+    <button onclick="requestReset()">Kirim Link Reset</button>
+  </div>
+</div>
+<script>
+function openReset(){
+  document.getElementById("resetModal").style.display = "flex";
+}
+
+function closeReset(){
+  document.getElementById("resetModal").style.display = "none";
+}
+
+function requestReset(){
+  const email = document.getElementById("resetEmail").value;
+  if(!email){
+    showModal("Email wajib diisi");
+    return;
+  }
+
+  fetch(API_URL + "?action=requestReset&email=" + encodeURIComponent(email))
+    .then(r => r.json())
+    .then(res => {
+      closeReset();
+      showModal(res.msg || "Jika email terdaftar, link reset akan dikirim");
+    })
+    .catch(() => {
+      closeReset();
+      showModal("Gagal menghubungi server");
+    });
+}
+</script>
+
+
 <body>
 
 <div class="login-card">
@@ -176,8 +214,10 @@ body {
   </form>
 
   <div class="login-footer">
-    Belum punya akun? <a href="register.html">Daftar</a>
-  </div>
+  Belum punya akun? <a href="register.html">Daftar</a><br>
+  <a href="#" onclick="openReset()">Lupa Password?</a>
+</div>
+
 </div>
 
 <script>
