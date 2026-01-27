@@ -1,189 +1,184 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register | CIKTER DELIVERY</title>
-  <script src="../js/auth.js"></script>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register | CIKTER DELIVERY</title>
 
+<script src="../js/auth.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: linear-gradient(180deg, #000000, #1a1a1a);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #333;
-    }
-
-    .card {
-      background: #fff;
-      width: 100%;
-      max-width: 380px;
-      padding: 30px 25px;
-      border-radius: 10px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-      animation: fadeUp 0.5s ease;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 25px;
-      color: #ff5722;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border-radius: 6px;
-      border: 1px solid #ddd;
-      font-size: 14px;
-      outline: none;
-      transition: border 0.3s;
-    }
-
-    input:focus, select:focus {
-      border-color: #ff5722;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #ff5722;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background: #e64a19;
-    }
-
-    .back {
-      text-align: center;
-      margin-top: 15px;
-    }
-
-    .back a {
-      color: #ff5722;
-      text-decoration: none;
-      font-size: 14px;
-    }
-
-    .back a:hover {
-      text-decoration: underline;
-    }
-
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-	
-	.label-role {
-	  display: block;
-	  margin-bottom: 6px;
-	  font-size: 13px;
-	  font-weight: bold;
-	  color: #555;
-	}
-
-	.password-wrapper {
-  position: relative;
-  width: 100%;
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{
+  margin:0;
+  min-height:100vh;
+  background:linear-gradient(180deg,#000,#1a1a1a);
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
-
-.password-wrapper input {
-  width: 100%;
-  padding: 12px 44px 12px 12px; /* kanan dikasih ruang */
-  font-size: 14px;
+.card{
+  background:#fff;
+  width:100%;
+  max-width:380px;
+  padding:30px 25px;
+  border-radius:10px;
+  box-shadow:0 8px 20px rgba(0,0,0,.3);
+  animation:fadeUp .4s ease;
 }
-
-.toggle-password {
-  position: absolute;
-  right: 12px;
-  top: 35%;
-  transform: translateY(-50%);
-  font-size: 22px;
-  color: #777;
-  cursor: pointer;
-  user-select: none;
-  line-height: 1;
-  display: flex;
-  align-items: center;
+h2{text-align:center;margin-bottom:25px;color:#ff5722}
+input,select{
+  width:100%;
+  padding:12px;
+  margin-bottom:15px;
+  border-radius:6px;
+  border:1px solid #ddd;
+  font-size:14px;
 }
-
-.toggle-password:hover {
-  color: #ff5722;
+input:focus,select:focus{border-color:#ff5722;outline:none}
+button{
+  width:100%;
+  padding:12px;
+  background:#ff5722;
+  border:none;
+  border-radius:6px;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
 }
+button:hover{background:#e64a19}
+.label-role{
+  font-size:13px;
+  font-weight:bold;
+  margin-bottom:6px;
+  display:block;
+}
+.password-wrapper{position:relative}
+.password-wrapper input{padding-right:44px}
+.toggle-password{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:22px;
+  cursor:pointer;
+  color:#777;
+}
+.toggle-password:hover{color:#ff5722}
+.back{text-align:center;margin-top:15px}
+.back a{color:#ff5722;text-decoration:none;font-size:14px}
+.back a:hover{text-decoration:underline}
 
-
-  </style>
+/* MODAL */
+#modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.5);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+.modal-box{
+  background:white;
+  padding:25px;
+  border-radius:10px;
+  width:90%;
+  max-width:320px;
+  text-align:center;
+  animation:fadeUp .3s ease;
+}
+.modal-box p{margin-bottom:15px}
+.modal-box a{
+  display:block;
+  background:#25D366;
+  color:white;
+  padding:10px;
+  border-radius:6px;
+  margin-bottom:12px;
+  text-decoration:none;
+  font-weight:bold;
+}
+.modal-box button{
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:6px;
+  background:#ff5722;
+  color:white;
+  font-weight:bold;
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+</style>
 </head>
 
 <body>
 
-  <div class="card">
-    <h2>Registrasi</h2>
+<div class="card">
+  <h2>Registrasi</h2>
 
-    <form onsubmit="register(event)">
-      <input id="nama" placeholder="Nama Lengkap" required>
-      <input id="hp" placeholder="No HP" required>
-      <input id="email" placeholder="Email" required>
-      <div class="password-wrapper">
-		  <input id="password" type="password" placeholder="Password" required>
-		  <span class="toggle-password material-icons-outlined" onclick="togglePassword()">
-		    visibility
-		  </span>
-		</div>
+  <form onsubmit="register(event)">
+    <input id="nama" placeholder="Nama Lengkap" required>
+    <input id="hp" placeholder="No HP" required>
+    <input id="email" placeholder="Email" required>
 
-
-	<label class="label-role">Pilih daftar sebagai Customer atau Kurir</label>
-	<select id="role">
-	  <option value="customer">Customer</option>
-	  <option value="kurir">Kurir</option>
-	</select>
-
-      <button type="submit">Daftar</button>
-    </form>
-
-    <div class="back">
-      <a href="../index.html">← Kembali ke Beranda</a>
+    <div class="password-wrapper">
+      <input id="password" type="password" placeholder="Password" required>
+      <span class="toggle-password material-icons-outlined" onclick="togglePassword()">visibility</span>
     </div>
+
+    <label class="label-role">Pilih daftar sebagai Customer atau Kurir</label>
+    <select id="role">
+      <option value="customer">Customer</option>
+      <option value="kurir">Kurir</option>
+    </select>
+
+    <button type="submit">Daftar</button>
+  </form>
+
+  <div class="back">
+    <a href="../index.html">← Kembali ke Beranda</a>
   </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal">
+  <div class="modal-box">
+    <p id="modalText"></p>
+    <a id="modalLink" target="_blank" style="display:none">Gabung WhatsApp</a>
+    <button onclick="closeModal()">OK</button>
+  </div>
+</div>
 
 <script>
-function togglePassword() {
-  const input = document.getElementById('password');
-  const icon = document.querySelector('.toggle-password');
-
-  if (input.type === 'password') {
-    input.type = 'text';
-    icon.textContent = 'visibility_off';
-  } else {
-    input.type = 'password';
-    icon.textContent = 'visibility';
+function togglePassword(){
+  const i=document.getElementById("password");
+  const ic=document.querySelector(".toggle-password");
+  if(i.type==="password"){
+    i.type="text";ic.textContent="visibility_off";
+  }else{
+    i.type="password";ic.textContent="visibility";
   }
 }
+function showModal(text,link){
+  document.getElementById("modalText").innerText=text;
+  const wa=document.getElementById("modalLink");
+  if(link){
+    wa.href=link;
+    wa.style.display="block";
+  }else{
+    wa.style.display="none";
+  }
+  document.getElementById("modal").style.display="flex";
+}
+function closeModal(){
+  document.getElementById("modal").style.display="none";
+}
 </script>
-	
+
 </body>
 </html>
