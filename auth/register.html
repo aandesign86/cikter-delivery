@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register | CIKTER DELIVERY</title>
   <script src="../js/auth.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
 
   <style>
     * {
@@ -104,6 +106,36 @@
 	  color: #555;
 	}
 
+	.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding: 12px 44px 12px 12px; /* kanan dikasih ruang */
+  font-size: 14px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 22px;
+  color: #777;
+  cursor: pointer;
+  user-select: none;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.toggle-password:hover {
+  color: #ff5722;
+}
+
+
   </style>
 </head>
 
@@ -116,7 +148,13 @@
       <input id="nama" placeholder="Nama Lengkap" required>
       <input id="hp" placeholder="No HP" required>
       <input id="email" placeholder="Email" required>
-      <input id="password" type="password" placeholder="Password" required>
+      <div class="password-wrapper">
+		  <input id="password" type="password" placeholder="Password" required>
+		  <span class="toggle-password material-icons-outlined" onclick="togglePassword()">
+		    visibility
+		  </span>
+		</div>
+
 
 	<label class="label-role">Pilih daftar sebagai Customer atau Kurir</label>
 	<select id="role">
@@ -132,5 +170,20 @@
     </div>
   </div>
 
+<script>
+function togglePassword() {
+  const input = document.getElementById('password');
+  const icon = document.querySelector('.toggle-password');
+
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.textContent = 'visibility_off';
+  } else {
+    input.type = 'password';
+    icon.textContent = 'visibility';
+  }
+}
+</script>
+	
 </body>
 </html>
