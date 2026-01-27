@@ -1,147 +1,301 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CIKTER DELIVERY</title>
-  <style>
-    /* Reset & basic */
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-    body { background-color: #f5f5f5; color: #333; line-height: 1.6; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CIKTER DELIVERY</title>
+<style>
+/* Reset & basic */
+* { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
+body { background-color:#f5f5f5; color:#333; line-height:1.6; }
 
-    /* Header */
-    header {
-      background-color: #ff5722;
-      color: white;
-      padding: 20px 0;
-      text-align: center;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    header h1 { margin-bottom: 5px; }
-    header p { font-size: 0.9rem; }
+/* Header + Navbar sticky */
+header {
+  position: sticky;
+  top:0;
+  z-index:1000;
+  background-color:#ff5722;
+  color:white;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 20px;
+  flex-wrap:wrap;
+}
+header .logo {
+  font-size:1.5rem;
+  font-weight:bold;
+  color: white;
+  text-decoration: none;   /* HILANGKAN GARIS BAWAH */
+}
 
-    /* Navbar */
-    nav {
-      background-color: #fff;
-      display: flex;
-      justify-content: center;
-      padding: 10px 0;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    nav a {
-      margin: 0 15px;
-      text-decoration: none;
-      color: #333;
-      font-weight: bold;
-      transition: color 0.3s;
-    }
-    nav a:hover { color: #ff5722; }
+header .tagline {
+  font-size:0.85rem;
+  margin-left:10px;
+  white-space:nowrap;
+}
+.navbar {
+  display:flex;
+  align-items:center;
+}
+.navbar a {
+  margin:0 10px;
+  text-decoration:none;
+  color:white;
+  font-weight:bold;
+  position:relative;
+  transition:all 0.3s ease;
+}
+.navbar a::after {
+  content:"";
+  display:block;
+  height:2px;
+  width:0;
+  background:white;
+  transition:width 0.3s;
+  position:absolute;
+  bottom:-4px;
+  left:0;
+}
+.navbar a:hover::after {
+  width:100%;
+}
+.hamburger {
+  display:none;
+  flex-direction:column;
+  cursor:pointer;
+}
+.hamburger div {
+  width:25px;
+  height:3px;
+  background-color:white;
+  margin:4px 0;
+  transition:0.4s;
+}
 
-    /* Hero Section */
-    .hero {
-      background: url('https://images.unsplash.com/photo-1605296867304-46d5465a13f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8b3plciUyMGNvdXJpZXIlMjBqYXNhfGVufDB8fDB8fA&ixlib=rb-4.0.3&q=80&w=1080') no-repeat center center/cover;
-      height: 70vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      text-align: center;
-      padding: 0 20px;
-    }
-    .hero h2 { font-size: 2.5rem; margin-bottom: 20px; }
-    .hero p { font-size: 1.2rem; margin-bottom: 30px; }
-    .hero a {
-      background-color: #ff5722;
-      color: white;
-      padding: 12px 25px;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
-    .hero a:hover { background-color: #e64a19; }
+/* Hero Section */
+.hero {
+  background: linear-gradient(180deg, #000000, #1a1a1a);
+  height:55vh;
+  display:flex;
+  flex-direction:row;
+  justify-content:center;
+  align-items:center;
+  color:white;
+  text-align:center;
+  padding:0 20px;
+}
+.hero h3 { font-size:1.8rem; #margin-bottom:30px; }
+.hero a {
+  background-color:#ff5722;
+  color:white;
+  padding:12px 25px;
+  border-radius:5px;
+  text-decoration:none;
+  font-weight:bold;
+  transition: background 0.3s;
+}
+.hero a:hover { background-color:#e64a19; }
 
-    /* Services */
-    .services {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      padding: 50px 20px;
-      max-width: 1200px;
-      margin: auto;
-    }
-    .service-card {
-      background-color: white;
-      border-radius: 10px;
-      padding: 30px 20px;
-      text-align: center;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.3s;
-    }
-    .service-card:hover { transform: translateY(-5px); }
-    .service-card h3 { margin-bottom: 15px; color: #ff5722; }
-    .service-card p { font-size: 0.95rem; }
+/* Services */
+.services {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
+  gap:20px;
+  padding:50px 20px;
+  max-width:900px;
+  margin:auto;
+}
+.service-card {
+  background-color:white;
+  border-radius:10px;
+  padding:30px 20px;
+  text-align:center;
+  box-shadow:0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+.service-card:hover { transform: translateY(-5px); }
+.service-card h3 { margin-bottom:15px; color:#ff5722; }
+.service-card p { font-size:0.95rem; }
 
-    /* Footer */
-    footer {
-      background-color: #333;
-      color: white;
-      text-align: center;
-      padding: 20px 10px;
-      margin-top: 50px;
-    }
-    footer a { color: #ff5722; text-decoration: none; }
-  </style>
+/* Cara Kerja */
+.left-text { 
+  text-align:left; 
+  max-width:600px; 
+  margin:20px auto; 
+  padding-left:20px; 
+  line-height:1.6;
+}
+
+/* Footer */
+footer {
+  background-color:#333;
+  color:white;
+  text-align:center;
+  padding:20px 10px;
+  margin-top:50px;
+}
+footer a { color:#ff5722; text-decoration:none; }
+
+/* Media Queries */
+@media (max-width:768px) {
+  .navbar {
+    width:100%;
+    flex-direction:column;
+    background:#ff5722;
+
+    /* ANIMATION CORE */
+    max-height:0;
+    overflow:hidden;
+    opacity:0;
+    transform: translateY(-10px);
+    transition: 
+      max-height 0.4s ease,
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .navbar.active {
+    max-height:300px; /* cukup untuk semua menu */
+    opacity:1;
+    transform: translateY(0);
+  }
+
+  .navbar a {
+    margin:0;
+    padding:12px 0;
+    text-align:center;
+  }
+
+  .hamburger {
+    display:flex;
+  }
+}
+
+.hero-image img {
+  width: 100%;
+  max-width: 320px;
+}
+
+@media (max-width: 768px) {
+  .hero-image img {
+    max-width: 220px;
+  }
+}
+
+.hero-content a {
+  display: inline-block;
+  margin-top: 20px;   /* JEDA ANTARA TEKS & TOMBOL */
+}
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;     /* jadi atas-bawah */
+    text-align: center;
+    height: auto;
+    padding: 40px 20px;
+  }
+
+  .hero-image {
+    order: 1;                   /* GAMBAR DI ATAS */
+    margin-bottom: 20px;
+  }
+
+  .hero-content {
+    order: 2;                   /* TEKS DI BAWAH */
+  }
+}
+
+
+</style>
 </head>
 <body>
 
-  <header>
-    <h1>CIKTER DELIVERY</h1>
-    <p>Kurir Delivery & Ojek Online <br> Layanan pengiriman cepat dan aman</p>
-  </header>
-
-  <nav>
+<header>
+  <a href="" class="logo">CIKTER DELIVERY</a>
+  <div class="hamburger" onclick="toggleMenu(this)">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+  <div class="navbar" id="navbarMenu">
     <a href="#services">Layanan</a>
     <a href="#how-it-works">Cara Kerja</a>
     <a href="#contact">Kontak</a>
+    <a href="auth/register.html">Register</a>
     <a href="auth/login.html">Login</a>
-  </nav>
+  </div>
+</header>
 
-  <section class="hero">
-    <h2>Kirim Paket & Antar Penumpang dengan Mudah</h2>
-    <p>Layanan kurir dan ojek online terbaik, cepat, aman, dan terjangkau.</p>
+<section class="hero">
+  <div class="hero-content">
+    <h3>Layanan Delivery Food & Ojek Online</h3>
+    <p>Cepat, aman, dan terpercaya untuk Anda.<br>Wilayah jangkauan Kec. Cikedung - Kec. Terisi Kab. Indramayu</p>
     <a href="auth/login.html">Pesan Sekarang</a>
-  </section>
+  </div>
 
-  <section id="services" class="services">
+  <div class="hero-image">
+    <img src="hero.png" alt="Delivery & Ojek Online">
+  </div>
+</section>
+
+
+<section id="services" style="padding:50px 20px; text-align:center;">
+  <h2 style="#margin-bottom:30px; color:#333;">Layanan</h2>
+
+  <div class="services">
     <div class="service-card">
-      <h3>Kurir Paket</h3>
-      <p>Kirim paket dengan cepat dan aman ke seluruh kota. Lacak pengiriman secara real-time.</p>
+      <h3>Delivery Food</h3>
+      <p>Pesan Makanan dengan cepat dan aman dengan pembayaran Cash On Delivery (COD).</p>
     </div>
+
     <div class="service-card">
       <h3>Ojek Online</h3>
-      <p>Antar penumpang atau belanjaan dengan driver terpercaya di sekitarmu.</p>
+      <p>Antar penumpang atau belanjaan dengan driver terpercaya di sekitarmu dengan pembayaran Cash On Delivery (COD).</p>
     </div>
-    <div class="service-card">
-      <h3>Pesanan Makanan</h3>
-      <p>Pesan makanan favoritmu dari restoran terdekat dan nikmati layanan cepat kami.</p>
-    </div>
-  </section>
+  </div>
+</section>
 
-  <section id="how-it-works" style="text-align:center; padding:50px 20px;">
-    <h2>Cara Kerja</h2>
-    <p>1. Pilih layanan (Kurir / Ojek / Makanan)<br>
-       2. Masukkan alamat pengambilan & tujuan<br>
-       3. Driver terdekat akan menerima pesananmu<br>
-       4. Lacak pesanan secara real-time sampai sampai tujuan
-    </p>
-  </section>
 
-  <footer>
-    &copy; 2026 Kurir & Ojol Online. All rights reserved. <br>
-    <a href="contact.html">Kontak Kami</a>
-  </footer>
+<section id="how-it-works" style="text-align:center; padding:50px 20px;">
+  <h2>Cara Kerja</h2>
+  <ol class="left-text">
+    <li>Pilih layanan: Delivery Food atau Ojek Online</li>
+    <li>Untuk Delivery Food: Masukkan alamat pengambilan & tujuan (alamatmu), dan tulis pesan makananmu secara rinci</li>
+    <li>Untuk Ojek Online: Masukkan alamat awal kamu & tujuan kamu</li>
+    <li>Driver terdekat akan menerima pesananmu</li>
+  </ol>
+</section>
+
+<section id="contact" class="services" style="padding:50px 20px;">
+  <div class="service-card">
+    <h3>Kontak</h3>
+    <p>Kami tidak menyediakan kontak langsung, tapi menyediakan Pop Up Live Chat di pojok kanan bawah halaman.</p>
+  </div>
+</section>
+
+<footer>
+  &copy; 2026 CIKTER DELIVERY. All rights reserved.
+</footer>
+
+<script>
+function toggleMenu() {
+  const menu = document.getElementById('navbarMenu');
+  menu.classList.toggle('active');
+}
+
+/* AUTO CLOSE SAAT MENU DIKLIK (MOBILE) */
+document.querySelectorAll('#navbarMenu a').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 768) {
+      document.getElementById('navbarMenu').classList.remove('active');
+    }
+  });
+});
+</script>
+
+
 
 </body>
 </html>
