@@ -103,8 +103,59 @@ body {
   text-decoration: none;
   font-weight: bold;
 }
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-box {
+  background: #fff;
+  padding: 22px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 320px;
+  text-align: center;
+}
+
+.modal-box p {
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.modal-box a {
+  display: none;
+  margin-bottom: 15px;
+  color: #25D366;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.modal-box button {
+  background: #ff5722;
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+  
 </style>
 </head>
+<!-- MODAL POPUP -->
+<div id="modal" class="modal">
+  <div class="modal-box">
+    <p id="modal-text"></p>
+    <a id="modal-link" target="_blank">Gabung Grup WhatsApp</a>
+    <button onclick="closeModal()">OK</button>
+  </div>
+</div>
 
 <body>
 
@@ -143,6 +194,27 @@ function togglePassword() {
   }
 }
 </script>
+
+  <script>
+function showModal(text, link = null) {
+  document.getElementById("modal-text").innerText = text;
+
+  const a = document.getElementById("modal-link");
+  if (link) {
+    a.href = link;
+    a.style.display = "inline-block";
+  } else {
+    a.style.display = "none";
+  }
+
+  document.getElementById("modal").style.display = "flex";
+}
+
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+}
+</script>
+
 
 </body>
 </html>
