@@ -14,17 +14,17 @@ function register(e){
     pin: Math.floor(1000 + Math.random() * 9000).toString()
   };
 
-  const params = new URLSearchParams(data).toString();
-
-  fetch(API_URL + "?" + params)
+  fetch(API_URL + "?" + new URLSearchParams(data))
     .then(r => r.json())
     .then(res => {
-      alert(res.msg || "Registrasi berhasil");
       if(res.status === "ok"){
-        location.href = "login.html";
+        showModal("Registrasi berhasil, silakan login");
+        setTimeout(() => location.href = "login.html", 1500);
+      }else{
+        showModal(res.msg || "Registrasi gagal");
       }
     })
-    .catch(() => alert("❌ Fetch error"));
+    .catch(() => showModal("❌ Koneksi gagal"));
 }
 
 /* ================= LOGIN ================= */
@@ -34,18 +34,23 @@ function login(e){
   const data = {
     action: "login",
     email: document.getElementById("email")?.value || "",
-    password: document.getElementById("password")?.value || "",
-    hp: document.getElementById("hp")?.value || "",
-    pin: document.getElementById("pin")?.value || ""
+    password: document.getElementById("password")?.value || ""
   };
 
-  const params = new URLSearchParams(data).toString();
-
-  fetch(API_URL + "?" + params)
+  fetch(API_URL + "?" + new URLSearchParams(data))
     .then(r => r.json())
     .then(res => {
+
+      if(res.status === "blocked"){
+        showModal(
+          "Akun kurir belum aktif. Silakan gabung grup WhatsApp untuk verifikasi akun.",
+          "https://chat.whatsapp.com/HFrhrJbxJJwDTxNPhNTQsH"
+        );
+        return;
+      }
+
       if(res.status !== "ok"){
-        alert(res.msg || "Login gagal");
+        showModal(res.msg || "Login gagal");
         return;
       }
 
@@ -59,7 +64,7 @@ function login(e){
         location.href = "../admin/index.html";
       }
     })
-    .catch(() => alert("❌ Fetch error"));
+    .catch(() => showModal("❌ Koneksi gagal"));
 }
 
 /* ================= ROLE GUARD ================= */
