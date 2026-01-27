@@ -1,24 +1,148 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Login</title>
-  <script src="../js/auth.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | CIKTER DELIVERY</title>
+
+<!-- Google Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+<script src="../js/auth.js"></script>
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: linear-gradient(180deg, #000000, #1a1a1a);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* CARD */
+.login-card {
+  background: white;
+  padding: 30px;
+  width: 100%;
+  max-width: 380px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* TITLE */
+.login-card h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #ff5722;
+}
+
+/* INPUT */
+.login-card input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* PASSWORD */
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 42px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 35%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 22px;
+  color: #777;
+}
+
+.toggle-password:hover {
+  color: #ff5722;
+}
+
+/* BUTTON */
+.login-card button {
+  width: 100%;
+  padding: 12px;
+  background: #ff5722;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.login-card button:hover {
+  background: #e64a19;
+}
+
+/* FOOTER */
+.login-footer {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.login-footer a {
+  color: #ff5722;
+  text-decoration: none;
+  font-weight: bold;
+}
+</style>
 </head>
+
 <body>
-<h2>Login</h2>
 
-<form onsubmit="login(event)">
-  <input id="email" placeholder="Email"><br>
-  <input id="password" type="password" placeholder="Password"><br>
+<div class="login-card">
+  <h2>Login</h2>
 
-  <p>— atau —</p>
+  <form onsubmit="login(event)">
+    <input id="email" placeholder="Email" required>
 
-  <input id="hp" placeholder="No HP"><br>
-  <input id="pin" placeholder="PIN"><br><br>
+    <div class="password-wrapper">
+      <input id="password" type="password" placeholder="Password" required>
+      <span class="toggle-password material-icons-outlined" onclick="togglePassword()">
+        visibility
+      </span>
+    </div>
 
-  <button>Login</button>
-</form>
+    <button type="submit">Login</button>
+  </form>
 
-<p><a href="register.html">Daftar Akun</a></p>
+  <div class="login-footer">
+    Belum punya akun? <a href="register.html">Daftar</a>
+  </div>
+</div>
+
+<script>
+function togglePassword() {
+  const input = document.getElementById('password');
+  const icon = document.querySelector('.toggle-password');
+
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.textContent = 'visibility_off';
+  } else {
+    input.type = 'password';
+    icon.textContent = 'visibility';
+  }
+}
+</script>
+
 </body>
 </html>
