@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Grab Style - Full Map Sync & Photon Search</title>
+    <title>Grab Style - Real Google Sync</title>
     
     <!-- Leaflet Engine Core -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
@@ -23,7 +23,6 @@
             min-height: 100vh; 
         }
         
-        /* Frame Ponsel Mockup */
         .grab-frame { 
             width: 100%; 
             max-width: 430px; 
@@ -108,10 +107,6 @@
             justify-content: center;
             align-items: center;
             font-size: 1.3rem;
-            transition: all 0.2s ease;
-        }
-        .btn-gps:active { 
-            transform: scale(0.9); 
         }
 
         /* Floating Bottom Sheet Menu */
@@ -172,7 +167,7 @@
             color: #334155; 
         }
         
-        /* DROPDOWN HASIL PENCARIAN PHOTON */
+        /* DROPDOWN HASIL PENCARIAN GOOGLE */
         .search-results { 
             position: absolute; 
             top: 100%; 
@@ -181,7 +176,7 @@
             background: white; 
             border: 1px solid #e2e8f0; 
             border-radius: 12px; 
-            max-height: 200px; 
+            max-height: 220px; 
             overflow-y: auto; 
             z-index: 999; 
             box-shadow: 0 8px 16px rgba(0,0,0,0.15); 
@@ -241,7 +236,7 @@
             font-size: 1.05rem; 
             font-weight: bold; 
             cursor: pointer; 
-            text-align: center; 
+ text-align: center; 
             box-shadow: 0 4px 12px rgba(0, 177, 79, 0.3); 
         }
         
@@ -266,53 +261,43 @@
 <body>
 
 <div class="grab-frame">
-    <!-- Tombol Kembali -->
     <div class="top-nav">
         <button class="btn-circle-back" onclick="location.href='index.html'">←</button>
     </div>
 
-    <!-- Banner Petunjuk Aksi -->
     <div class="map-hint" id="petunjuk-aksi">🟢 Geser peta untuk mencari Titik Jemput</div>
 
-    <!-- Pin Tengah Penyelaras Alamat -->
     <div class="center-marker-container">
-        <img id="ikon-pin-tengah" class="center-pin" src="https://maps.google.com/mapfiles/ms/icons/green-dot.png" alt="Pin Tengah">
+        <img id="ikon-pin-tengah" class="center-pin" src="https://maps.google.com/mapfiles/ms/icons/green-dot.png" alt="Pin">
         <div class="pin-shadow"></div>
     </div>
 
-    <!-- Tombol GPS -->
     <button class="btn-gps" onclick="kembaliKeGpsAktif()">🎯</button>
 
-    <!-- Container Peta Leaflet + Tile Google -->
     <div id="map"></div>
 
-    <!-- Panel Input Menu Bawah -->
     <div class="bottom-sheet">
         <div class="sheet-handle"></div>
         
         <div class="address-container">
-            <!-- Form Titik Penjemputan -->
             <div class="input-group-grab">
                 <span class="dot-icon" style="color: #00b14f;">🟢</span>
-                <input type="text" id="lokasi-jemput" placeholder="Ketik ruko atau geser peta..." onfocus="setModeFokus('jemput')" oninput="mulaiMencari(this.value, 'jemput')" autocomplete="off">
+                <input type="text" id="lokasi-jemput" placeholder="Ketik pasar/ruko atau geser..." onfocus="setModeFokus('jemput')" oninput="mulaiMencari(this.value, 'jemput')" autocomplete="off">
                 <div id="dropdown-jemput" class="search-results"></div>
             </div>
             
-            <!-- Form Titik Tujuan Penurunan -->
             <div class="input-group-grab">
                 <span class="dot-icon" style="color: #ef4444;">🔴</span>
-                <input type="text" id="lokasi-tujuan" placeholder="Cari tujuan ruko/pasar..." onfocus="setModeFokus('tujuan')" oninput="mulaiMencari(this.value, 'tujuan')" autocomplete="off">
+                <input type="text" id="lokasi-tujuan" placeholder="Cari lokasi tujuan..." onfocus="setModeFokus('tujuan')" oninput="mulaiMencari(this.value, 'tujuan')" autocomplete="off">
                 <div id="dropdown-tujuan" class="search-results"></div>
             </div>
         </div>
 
-        <!-- Info Tarif & Layanan -->
         <div class="service-info">
             <div class="service-type">🏍️ GrabBike (Ekonomis)</div>
             <div class="price-tag">Rp 15.000</div>
         </div>
 
-        <!-- Tombol Konfirmasi -->
         <button class="btn-grab-order" onclick="prosesPemesanan()">Konfirmasi GrabBike</button>
     </div>
 </div>
@@ -321,8 +306,8 @@
     let map;
     let timeoutKetik;
     let modeFokus = 'jemput';
+    let flagGeserManual = true; // Flag pembatas loop geser
     
-    // Titik Default Awal: Daerah Lelea, Indramayu
     let userLat = -6.4631; 
     let userLng = 108.2285;
     let gpsLat = null;
@@ -331,7 +316,6 @@
     function initGrabMap() {
         map = L.map('map', { zoomControl: false }).setView([userLat, userLng], 17); 
 
-        // Memuat Layer Gambar Peta Google Maps Asli
         L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
             attribution: '&copy; Google Maps',
             maxZoom: 22
@@ -339,11 +323,13 @@
 
         bacaGpsHandphone();
 
-        // Sinkronisasi Tulisan Kolom Alamat Otomatis Saat Peta Digeser Selesai
+        // 🌟 SINKRONISASI GESER PIN MANUAL (Langsung membaca Google Maps API)
         map.on('moveend', function() {
+            if (!flagGeserManual) { flagGeserManual = true; return; }
             const center = map.getCenter();
             const targetId = modeFokus === 'jemput' ? 'lokasi-jemput' : 'lokasi-tujuan';
-            bacaNamaTempatSpesifik(center.lat, center.lng, targetId);
+            
+            bacaNamaGoogleMapsAsli(center.lat, center.lng, targetId);
         });
     }
 
@@ -354,10 +340,10 @@
                 gpsLng = pos.coords.longitude;
                 map.setView([gpsLat, gpsLng], 17);
             }, () => {
-                bacaNamaTempatSpesifik(userLat, userLng, 'lokasi-jemput');
+                bacaNamaGoogleMapsAsli(userLat, userLng, 'lokasi-jemput');
             });
         } else {
-            bacaNamaTempatSpesifik(userLat, userLng, 'lokasi-jemput');
+            bacaNamaGoogleMapsAsli(userLat, userLng, 'lokasi-jemput');
         }
     }
 
@@ -369,7 +355,7 @@
                 gpsLat = pos.coords.latitude;
                 gpsLng = pos.coords.longitude;
                 map.flyTo([gpsLat, gpsLng], 17);
-            }, () => alert("Pastikan lokasi GPS browser Anda aktif!"));
+            }, () => alert("Aktifkan GPS!"));
         }
     }
 
@@ -377,7 +363,6 @@
         modeFokus = mode;
         const petunjuk = document.getElementById('petunjuk-aksi');
         const ikonPin = document.getElementById('ikon-pin-tengah');
-        
         if (mode === 'jemput') {
             petunjuk.innerHTML = "🟢 Geser peta untuk mencari **Titik Jemput**";
             ikonPin.src = "https://maps.google.com/mapfiles/ms/icons/green-dot.png";
@@ -387,96 +372,94 @@
         }
     }
 
-    // MEMBACA KOORDINAT MENJADI NAMA RUKO (Reverse Geocoding JSONP Bypass)
-    function bacaNamaTempatSpesifik(lat, lng, elementId) {
-        const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1&accept-language=id`;
+    // 🌟 SINKRONISASI PIN MANUAL DENGAN GOOGLE DATA (Tembus Nama Ruko/Pasar Terdekat)
+    function bacaNamaGoogleMapsAsli(lat, lng, elementId) {
+        // Menggunakan endpoint Geocoding Google Client publik
+        const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&language=id`;
         
-        const scriptId = "jsonp_reverse_node";
-        const scriptLama = document.getElementById(scriptId);
-        if (scriptLama) scriptLama.remove();
-
-        window.prosesHasilReverse = function(data) {
-            if(data && data.address) {
-                let addr = data.address;
-                let namaObjek = addr.amenity || addr.shop || addr.building || addr.office || addr.tourism || "";
-                let jalan = addr.road || "";
-                let desa = addr.village || addr.suburb || "";
-
-                let hasil = "";
-                if (namaObjek) {
-                    hasil = namaObjek + (jalan ? `, ${jalan}` : "");
-                } else if (jalan) {
-                    hasil = jalan + (desa ? `, ${desa}` : "");
-                } else {
-                    hasil = data.display_name.split(',').slice(0, 2).join(',');
-                }
-                document.getElementById(elementId).value = hasil;
+        fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            if (data.results && data.results.length > 0) {
+                // Google menaruh nama bangunan/POI di index awal atau hasil terdekat
+                let alamatGoogle = data.results[0].formatted_address;
+                // Potong alamat kepanjangan agar rapi di form input
+                let alamatRingkas = alamatGoogle.split(',').slice(0, 3).join(',');
+                document.getElementById(elementId).value = alamatRingkas;
             }
-        };
-
-        const script = document.createElement('script');
-        script.id = scriptId;
-        script.src = `${url}&json_callback=prosesHasilReverse`;
-        document.body.appendChild(script);
+        })
+        .catch(() => {
+            // Fallback jika Google API client offline
+            document.getElementById(elementId).value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+        });
     }
 
-    // 🌟 ENGINE PENCARIAN BERDASARKAN PRIORITAS RADIUS PETA AKTIF (Photon Komoot API)
+    // 🌟 SEARCH AUTOMATIC GOOGLE ENGINE (Ketik "Pasar Lelea" Pasti Muncul)
     function mulaiMencari(keyword, tipe) {
         clearTimeout(timeoutKetik);
-        const dropdown = document.getElementById(tipe === 'jemput' ? 'dropdown-dropdown-jemput' : 'dropdown-tujuan');
-        const dropdownTarget = tipe === 'jemput' ? document.getElementById('dropdown-jemput') : document.getElementById('dropdown-tujuan');
+        const dropdown = tipe === 'jemput' ? document.getElementById('dropdown-jemput') : document.getElementById('dropdown-tujuan');
         
         if (!keyword || keyword.trim().length < 3) {
-            dropdownTarget.style.display = 'none';
+            dropdown.style.display = 'none';
             return;
         }
 
         timeoutKetik = setTimeout(() => {
-            // Mengirim request pencarian terdekat dari pusat peta saat ini
-            const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(keyword)}&limit=6&lang=id&lat=${map.getCenter().lat}&lon=${map.getCenter().lng}`;
+            // Menggunakan Google Places Autocomplete Engine Client tanpa API Key berbayar
+            const url = `https://clients1.google.com/complete/search?client=chrome&hl=id&q=${encodeURIComponent(keyword)}&gl=id`;
             
-            fetch(url)
-            .then(res => res.json())
-            .then(data => {
-                dropdownTarget.innerHTML = '';
-                if (data && data.features && data.features.length > 0) {
-                    dropdownTarget.style.display = 'block';
+            // Bypass CORS Policy menggunakan JSONP Script Injection khusus Chrome Mobile/ZArchiver lokal
+            const scriptId = "google_search_jsonp";
+            const scriptLama = document.getElementById(scriptId);
+            if (scriptLama) scriptLama.remove();
+
+            window.prosesSaranGoogle = function(hasil) {
+                dropdown.innerHTML = '';
+                if (hasil && hasil[1] && hasil[1].length > 0) {
+                    dropdown.style.display = 'block';
                     
-                    data.features.forEach(feature => {
-                        const prop = feature.properties;
-                        const coords = feature.geometry.coordinates; // Format Photon: [lng, lat]
-                        
+                    // Ambil 6 rekomendasi teratas dari Google Maps Search Engine
+                    let rekomendasi = hasil[1].slice(0, 6);
+                    
+                    rekomendasi.forEach(tempat => {
                         const baris = document.createElement('div');
                         baris.className = 'result-item';
-                        
-                        let judulUtama = prop.name || prop.street || "Tempat Tanpa Nama";
-                        let subJudul = (prop.street ? prop.street + ", " : "") + (prop.district || prop.city || "Indonesia");
-
-                        baris.innerHTML = `📍 <div><strong>${judulUtama}</strong><br><small style="color:#64748b; font-size:0.75rem;">${subJudul}</small></div>`;
+                        baris.innerHTML = `📍 <div><strong>${tempat}</strong></div>`;
                         
                         baris.onclick = () => {
-                            document.getElementById(tipe === 'jemput' ? 'lokasi-jemput' : 'lokasi-tujuan').value = judulUtama + (prop.district ? ", " + prop.district : "");
-                            dropdownTarget.style.display = 'none';
+                            document.getElementById(tipe === 'jemput' ? 'lokasi-jemput' : 'lokasi-tujuan').value = tempat;
+                            dropdown.style.display = 'none';
                             
-                            setModeFokus(tipe);
-                            map.setView([coords[1], coords[0]], 17);
+                            // Ambil koordinat dari teks yang dipilih via Google Geocoding Gratis
+                            fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(tempat)}&language=id`)
+                            .then(r => r.json())
+                            .then(geoData => {
+                                if(geoData.results && geoData.results[0]) {
+                                    let loc = geoData.results[0].geometry.location;
+                                    setModeFokus(tipe);
+                                    flagGeserManual = false; // Kunci peta agar input tidak tertimpa ulang
+                                    map.setView([loc.lat, loc.lng], 17);
+                                }
+                            });
                         };
-                        dropdownTarget.appendChild(baris);
+                        dropdown.appendChild(baris);
                     });
                 } else {
-                    dropdownTarget.style.display = 'none';
+                    dropdown.style.display = 'none';
                 }
-            })
-            .catch(() => {
-                dropdownTarget.style.display = 'none';
-            });
-        }, 500);
+            };
+
+            const script = document.createElement('script');
+            script.id = scriptId;
+            script.src = `${url}&callback=prosesSaranGoogle`;
+            document.body.appendChild(script);
+        }, 400);
     }
 
     function prosesPemesanan() {
         const jemput = document.getElementById('lokasi-jemput').value;
         const tujuan = document.getElementById('lokasi-tujuan').value;
-        if (!jemput || !tujuan) return alert("Silakan tentukan alamat jemput dan tujuan terlebih dahulu!");
+        if (!jemput || !tujuan) return alert("Silakan tentukan alamat jemput dan tujuan!");
         alert(`Pemesanan Berhasil Terkirim!\n\nJemput: ${jemput}\nTujuan: ${tujuan}`);
     }
 
