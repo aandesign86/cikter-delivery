@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Mitra Merchant</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { display: flex; justify-content: center; background: #f3f4f6; padding: 20px; }
+        .card { width: 100%; max-width: 400px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        h2 { margin-bottom: 15px; }
+        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; background: #00b14f; color: white; }
+        .menu-list { margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
+        button.back { background: #666; margin-top: 10px; width: 100%; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Mitra Toko / Merchant</h2>
+    <h3>Tambah Menu Baru:</h3>
+    <input type="text" id="produk" placeholder="Contoh: Nasi Goreng Spesial">
+    <input type="number" id="harga" placeholder="Harga (Rp)">
+    <button onclick="tambahMenu()">Tambah Ke Aplikasi</button>
+    
+    <div class="menu-list">
+        <h3>Daftar Menu Toko Anda:</h3>
+        <ul id="list" style="padding-left: 20px; margin-top: 10px; color: #555;">
+            <li>Ayam Bakar Madu - Rp 25.000</li>
+        </ul>
+    </div>
+    <button class="back" onclick="location.href='index.html'">Keluar Halaman</button>
+</div>
+
+<script>
+    function tambahMenu() {
+        const produk = document.getElementById('produk').value;
+        const harga = document.getElementById('harga').value;
+        if(!produk || !harga) return alert("Lengkapi nama menu dan harga!");
+        
+        const li = document.createElement('li');
+        li.innerText = `${produk} - Rp ${parseInt(harga).toLocaleString('id-ID')}`;
+        document.getElementById('list').appendChild(li);
+        
+        document.getElementById('produk').value = '';
+        document.getElementById('harga').value = '';
+        alert("Menu berhasil ditambahkan ke database lokal!");
+    }
+</script>
+</body>
+</html>

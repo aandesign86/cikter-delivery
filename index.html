@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gojek Interface Login</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f3f4f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        
+        /* Container HP Mockup */
+        .gojek-frame { width: 100%; max-width: 420px; background: white; height: 90vh; min-height: 550px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        
+        /* Konten Halaman */
+        .screen { display: none; padding: 30px; flex-direction: column; height: 100%; justify-content: space-between; }
+        .screen.active { display: flex; }
+        
+        /* Elemen UI */
+        .logo-area { text-align: left; margin-top: 20px; }
+        .logo-gojek { font-size: 28px; font-weight: 800; color: #00b14f; letter-spacing: -1px; }
+        
+        .title-text { font-size: 1.4rem; font-weight: 800; color: #1c1c1c; margin-top: 20px; margin-bottom: 8px; text-align: left; }
+        .subtitle-text { font-size: 0.9rem; color: #64748b; margin-bottom: 30px; text-align: left; line-height: 1.4; }
+        
+        .input-wrapper { text-align: left; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 700; color: #475569; font-size: 0.85rem; }
+        
+        /* Input & Select Custom */
+        input, select { width: 100%; padding: 16px; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 1rem; background: #f8fafc; outline: none; transition: 0.2s; color: #334155; }
+        input:focus, select:focus { border-color: #00b14f; background: #fff; box-shadow: 0 0 0 4px rgba(0, 177, 79, 0.1); }
+        
+        /* Tombol Utama Hijau Gojek */
+        .btn-gojek { width: 100%; padding: 16px; background: #00b14f; color: white; border: none; border-radius: 25px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.2s; text-align: center; }
+        .btn-gojek:hover { background: #009640; }
+        
+        /* OTP Input Grid */
+        .otp-container { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
+        .otp-input { width: 50px; height: 50px; text-align: center; font-size: 1.5rem; font-weight: 700; border-radius: 12px; border: 1px solid #cbd5e1; background: #f8fafc; }
+        
+        .btn-back { background: none; border: none; color: #64748b; font-weight: 700; cursor: pointer; text-align: left; align-self: flex-start; margin-top: 10px; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+<div class="gojek-frame">
+
+    <!-- SCREEN 1: PILIH PERAN (ROLE) -->
+    <div id="screen-role" class="screen active">
+        <div>
+            <div class="logo-area"><span class="logo-gojek">gojek</span></div>
+            <h3 class="title-text">Selamat datang di Gojek!</h3>
+            <p class="subtitle-text">Silahkan tentukan peran Anda untuk masuk ke sistem dashboard khusus.</p>
+            
+            <div class="input-wrapper">
+                <label>PILIH PERAN</label>
+                <select id="user-role">
+                    <option value="pelanggan">📱 User Pelanggan</option>
+                    <option value="driver">🏍️ User Driver (Mitra)</option>
+                    <option value="mitra">🍳 User Mitra Merchant</option>
+                    <option value="admin">👑 User Admin</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn-gojek" onclick="lanjutKePhone()">Lanjut</button>
+    </div>
+
+    <!-- SCREEN 2: INPUT NOMOR HP -->
+    <div id="screen-phone" class="screen">
+        <div>
+            <button class="btn-back" onclick="kembaliKeRole()">← Kembali</button>
+            <h3 class="title-text">Masukkan nomor HP Anda</h3>
+            <p class="subtitle-text">Nomor HP ini akan digunakan untuk mengirimkan kode verifikasi masuk.</p>
+            
+            <div class="input-wrapper">
+                <label>NOMOR HANDPHONE</label>
+                <input type="tel" id="user-phone" placeholder="Contoh: 0812345678" required>
+            </div>
+        </div>
+        <button class="btn-gojek" onclick="lanjutKeOTP()">Kirim OTP</button>
+    </div>
+
+    <!-- SCREEN 3: VERIFIKASI OTP -->
+    <div id="screen-otp" class="screen">
+        <div>
+            <button class="btn-back" onclick="kembaliKePhone()">← Kembali</button>
+            <h3 class="title-text">Masukkan kode OTP</h3>
+            <p class="subtitle-text">Kami mengirimkan kode simulasi keamanan ke nomor Anda. Isi asal 4 angka untuk demo.</p>
+            
+            <div class="otp-container">
+                <input type="text" class="otp-input" maxlength="1" oninput="moveNext(this, 1)">
+                <input type="text" class="otp-input" maxlength="1" oninput="moveNext(this, 2)">
+                <input type="text" class="otp-input" maxlength="1" oninput="moveNext(this, 3)">
+                <input type="text" class="otp-input" maxlength="1" oninput="moveNext(this, 4)">
+            </div>
+        </div>
+        <button class="btn-gojek" onclick="verifikasiDanMasuk()">Konfirmasi & Masuk</button>
+    </div>
+
+</div>
+
+<script>
+    let roleTerpilih = "";
+    let nomorHPTerpilih = "";
+
+    function gantiScreen(screenId) {
+        // Sembunyikan semua screen
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        // Tampilkan screen yang dituju
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    function lanjutKePhone() {
+        roleTerpilih = document.getElementById('user-role').value;
+        gantiScreen('screen-phone');
+    }
+
+    function kembaliKeRole() {
+        gantiScreen('screen-role');
+    }
+
+    function lanjutKeOTP() {
+        nomorHPTerpilih = document.getElementById('user-phone').value;
+        if(!nomorHPTerpilih) return alert("Nomor HP tidak boleh kosong!");
+        gantiScreen('screen-otp');
+    }
+
+    function kembaliKePhone() {
+        gantiScreen('screen-phone');
+    }
+
+    // Fungsi otomatis pindah kotak input OTP saat diketik
+    function moveNext(current, index) {
+        if(current.value.length >= 1 && index < 4) {
+            document.querySelectorAll('.otp-input')[index].focus();
+        }
+    }
+
+    function verifikasiDanMasuk() {
+        // Simulasi Frontend: langsung lempar ke file dashboard berdasarkan role yang dipilih
+        alert(`Frontend Sukses!\nMasuk sebagai: ${roleTerpilih}\nNo HP: ${nomorHPTerpilih}`);
+        window.location.href = roleTerpilih + ".html"; 
+    }
+</script>
+</body>
+</html>

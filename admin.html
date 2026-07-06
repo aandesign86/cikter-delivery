@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background: #f3f4f6; padding: 30px; display: flex; justify-content: center; }
+        .admin-box { width: 100%; max-width: 600px; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        h2 { margin-bottom: 20px; color: #111827; }
+        .btn-sheet { padding: 12px 20px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 20px; display: inline-block; text-decoration: none; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #e5e7eb; padding: 12px; text-align: left; }
+        th { background: #f9fafb; }
+        button.back { padding: 10px 20px; background: #666; color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="admin-box">
+    <h2>Control Panel Admin Utama</h2>
+    <p style="margin-bottom: 15px;">Gunakan tombol di bawah untuk memantau data transaksi mentah langsung di Google Sheets:</p>
+    <a href="https://docs.google.com/spreadsheets/" target="_blank" class="btn-sheet">📊 Buka Database Google Sheets</a>
+    
+    <h3>Log Aktivitas Real-Time Terakhir:</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Waktu</th>
+                <th>Jenis Aktivitas</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Baru saja</td>
+                <td>Sistem Peta Terhubung (Leaflet.js)</td>
+                <td><span style="color:green; font-weight:bold;">Aktif</span></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <button class="back" onclick="location.href='index.html'">Keluar Halaman Admin</button>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Driver</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { display: flex; justify-content: center; background: #f3f4f6; padding: 20px; }
+        .card { width: 100%; max-width: 400px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        h2 { margin-bottom: 15px; color: #333; }
+        .status-btn { width: 100%; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; background: #22c55e; color: white; margin-bottom: 20px; }
+        .order-box { border: 1px solid #e5e7eb; padding: 15px; border-radius: 8px; background: #f9fafb; min-height: 100px; }
+        button.back { width: 100%; padding: 10px; margin-top: 20px; background: #666; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Mitra Driver Dashboard</h2>
+    <button class="status-btn" id="status" onclick="toggleStatus()">Status: ONLINE (Mencari Order)</button>
+    
+    <h3>Orderan Masuk:</h3>
+    <div class="order-box" id="orders">
+        <p style="color:#888;">Belum ada orderan masuk dari Google Sheets...</p>
+    </div>
+    
+    <button class="back" onclick="location.href='index.html'">Keluar Halaman</button>
+</div>
+
+<script>
+    let isOnline = true;
+    function toggleStatus() {
+        isOnline = !isOnline;
+        const btn = document.getElementById('status');
+        if(isOnline) {
+            btn.innerText = "Status: ONLINE (Mencari Order)";
+            btn.style.background = "#22c55e";
+        } else {
+            btn.innerText = "Status: OFFLINE (Istirahat)";
+            btn.style.background = "#ef4444";
+        }
+    }
+</script>
+</body>
+</html>
