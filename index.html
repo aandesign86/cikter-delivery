@@ -3,143 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gojek Interface Login</title>
+    <title>Grab Web Demo - Fixed Version</title>
+    
+    <!-- Tailwind CSS untuk UI Premium -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <!-- Font Awesome untuk Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #f3f4f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        
-        /* Container HP Mockup */
-        .gojek-frame { width: 100%; max-width: 420px; background: white; height: 90vh; min-height: 550px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; position: relative; }
-        
-        /* Konten Halaman */
-        .screen { display: none; padding: 30px; flex-direction: column; height: 100%; justify-content: space-between; }
-        .screen.active { display: flex; }
-        
-        /* Elemen UI */
-        .logo-area { text-align: left; margin-top: 20px; }
-        .logo-gojek { font-size: 28px; font-weight: 800; color: #00b14f; letter-spacing: -1px; }
-        
-        .title-text { font-size: 1.4rem; font-weight: 800; color: #1c1c1c; margin-top: 20px; margin-bottom: 8px; text-align: left; }
-        .subtitle-text { font-size: 0.9rem; color: #64748b; margin-bottom: 30px; text-align: left; line-height: 1.4; }
-        
-        .input-wrapper { text-align: left; margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 700; color: #475569; font-size: 0.85rem; }
-        
-        /* Input & Select Custom */
-        input, select { width: 100%; padding: 16px; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 1rem; background: #f8fafc; outline: none; transition: 0.2s; color: #334155; }
-        input:focus, select:focus { border-color: #00b14f; background: #fff; box-shadow: 0 0 0 4px rgba(0, 177, 79, 0.1); }
-        
-        /* Tombol Utama Hijau Gojek */
-        .btn-gojek { width: 100%; padding: 16px; background: #00b14f; color: white; border: none; border-radius: 25px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.2s; text-align: center; }
-        .btn-gojek:hover { background: #009640; }
-        
-        /* OTP Input Grid */
-        .otp-container { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
-        .otp-input { width: 50px; height: 50px; text-align: center; font-size: 1.5rem; font-weight: 700; border-radius: 12px; border: 1px solid #cbd5e1; background: #f8fafc; }
-        
-        .btn-back { background: none; border: none; color: #64748b; font-weight: 700; cursor: pointer; text-align: left; align-self: flex-start; margin-top: 10px; font-size: 0.9rem; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: sans-serif; overflow: hidden; }
+        #map { height: 100vh; width: 100vw; z-index: 1; }
+        .floating-panel { z-index: 1000; }
+        .suggestion-box::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body>
+<body class="bg-gray-100 flex flex-col md:block">
 
-<div class="gojek-frame">
+    <!-- CONTAINER UTAMA -->
+    <div class="relative w-full h-MASUKKAN_API_KEY_ANDA_DISINIfull flex flex-col md:block">
+        
+        <!-- PETA UTAMA GOOGLE MAPS -->
+        <div id="map" class="flex-grow md:absolute md:inset-0"></div>
 
-    <!-- SCREEN 1: PILIH PERAN (ROLE) -->
-    <div id="screen-role" class="screen active">
-        <div>
-            <div class="logo-area"><span class="logo-gojek">gojek</span></div>
-            <h3 class="title-text">Selamat datang di Gojek!</h3>
-            <p class="subtitle-text">Silahkan tentukan peran Anda untuk masuk ke sistem dashboard khusus.</p>
+        <!-- PANEL PEMESANAN RESPONSIF (Bottom Sheet di HP) -->
+        <div class="floating-panel bg-white rounded-t-3xl md:rounded-2xl shadow-2xl p-5 w-full md:max-w-md md:absolute md:top-4 md:left-4 max-h-[60vh] md:max-h-[90vh] overflow-y-auto flex flex-col pb-8 md:pb-5">
             
-            <div class="input-wrapper">
-                <label>PILIH PERAN</label>
-                <select id="user-role">
-                    <option value="pelanggan">📱 User Pelanggan</option>
-                    <option value="driver">🏍️ User Driver (Mitra)</option>
-                    <option value="mitra">🍳 User Mitra Merchant</option>
-                    <option value="admin">👑 User Admin</option>
-                </select>
+            <!-- Garis Handle HP -->
+            <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4 md:hidden"></div>
+
+            <!-- Logo Grab -->
+            <div class="flex items-center justify-between mb-4 md:mb-6">
+                <span class="text-2xl md:text-3xl font-extrabold text-[#00B14F] tracking-tight">Grab<span class="text-gray-800 font-light text-xl ml-1">Demo</span></span>
+                <div class="flex space-x-2">
+                    <button class="bg-gray-100 p-2 rounded-full text-gray-600 hover:bg-gray-200 text-sm"><i class="fa-solid fa-history"></i></button>
+                    <button class="bg-gray-100 p-2 rounded-full text-gray-600 hover:bg-gray-200 text-sm"><i class="fa-solid fa-user"></i></button>
+                </div>
             </div>
+
+            <!-- Pilihan Layanan -->
+            <div class="flex space-x-4 mb-4 border-b border-gray-100 pb-2">
+                <button class="flex items-center space-x-2 pb-2 border-b-2 border-[#00B14F] text-[#00B14F] font-bold text-sm">
+                    <i class="fa-solid fa-motorcycle"></i> <span>GrabBike</span>
+                </button>
+                <button class="flex items-center space-x-2 pb-2 text-gray-400 text-sm">
+                    <i class="fa-solid fa-car"></i> <span>GrabCar</span>
+                </button>
+            </div>
+
+            <!-- Form Input Lokasi -->
+            <div class="space-y-3 relative">
+                <!-- Garis Dot -->
+                <div class="absolute left-3.5 top-5 w-0.5 h-10 bg-gray-200 z-10"></div>
+
+                <!-- Input Jemput -->
+                <div class="relative">
+                    <div class="absolute left-3 top-3.5 z-20 flex items-center">
+                        <i class="fa-solid fa-circle text-[#00B14F] text-[10px]"></i>
+                    </div>
+                    <input id="input-jemput" type="text" placeholder="Mau dijemput di mana?" autocomplete="off"
+                        class="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#00B14F] focus:bg-white shadow-sm transition">
+                    <!-- Suggestion Box -->
+                    <div id="suggest-jemput" class="suggestion-box hidden absolute left-0 right-0 top-11 bg-white border border-gray-200 rounded-xl shadow-xl max-h-48 overflow-y-auto z-50"></div>
+                </div>
+
+                <!-- Input Antar -->
+                <div class="relative">
+                    <div class="absolute left-3 top-3.5 z-20 flex items-center">
+                        <i class="fa-solid fa-location-dot text-red-500 text-xs"></i>
+                    </div>
+                    <input id="input-antar" type="text" placeholder="Mau antar ke mana?" autocomplete="off"
+                        class="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#00B14F] focus:bg-white shadow-sm transition">
+                    <!-- Suggestion Box -->
+                    <div id="suggest-antar" class="suggestion-box hidden absolute left-0 right-0 top-11 bg-white border border-gray-200 rounded-xl shadow-xl max-h-48 overflow-y-auto z-50"></div>
+                </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loading" class="hidden text-center my-3 text-[#00B14F]">
+                <i class="fa-solid fa-circle-notch animate-spin text-xl"></i>
+            </div>
+
+            <!-- DETAIL TARIF & PEMBAYARAN -->
+            <div id="panel-tarif" class="hidden mt-4 pt-3 border-t border-gray-100">
+                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl mb-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-[#00B14F] text-white p-2 rounded-lg text-md"><i class="fa-solid fa-motorcycle"></i></div>
+                        <div>
+                            <p class="font-bold text-gray-800 text-xs">GrabBike</p>
+                            <p class="text-[10px] text-gray-500" id="text-jarak">0 km</p>
+                        </div>
+                    </div>
+                    <span class="text-lg font-extrabold text-gray-900" id="text-harga">Rp 0</span>
+                </div>
+
+                <button onclick="alert('Pesanan Terkirim!')" class="w-full bg-[#00B14F] text-white font-bold py-3 rounded-xl shadow-md text-sm">
+                    Pesan GrabBike
+                </button>
+            </div>
+
         </div>
-        <button class="btn-gojek" onclick="lanjutKePhone()">Lanjut</button>
     </div>
 
-    <!-- SCREEN 2: INPUT NOMOR HP -->
-    <div id="screen-phone" class="screen">
-        <div>
-            <button class="btn-back" onclick="kembaliKeRole()">← Kembali</button>
-            <h3 class="title-text">Masukkan nomor HP Anda</h3>
-            <p class="subtitle-text">Nomor HP ini akan digunakan untuk mengirimkan kode verifikasi masuk.</p>
-            
-            <div class="input-wrapper">
-                <label>NOMOR HANDPHONE</label>
-                <input type="tel" id="user-phone" placeholder="Contoh: 0812345678" required>
-            </div>
-        </div>
-        <button class="btn-gojek" onclick="lanjutKeOTP()">Kirim OTP</button>
-    </div>
+    <!-- SDK Google Maps (Tetap dipasang untuk background peta) -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC94TviIuelGJLjcURv6awTnbmO8EzARk8&callback=initMap" async defer></script>
 
-    <!-- SCREEN 3: VERIFIKASI OTP -->
-    <div id="screen-otp" class="screen">
-        <div>
-            <button class="btn-back" onclick="kembaliKePhone()">← Kembali</button>
-            <h3 class="title-text">Masukkan kode OTP</h3>
-            <p class="subtitle-text">Kami mengirimkan kode simulasi keamanan ke nomor Anda. Isi asal 4 angka untuk demo.</p>
-            
-            <div class="otp-container">
-                <input type="text" class="otp-input" maxlength="1" oninput="moveNext(this, 1)">
-                <input type="text" class="otp-input" maxlength="1" oninput="moveNext(this, 2)">
-                <input type="text" class="otp-input" maxlength="1" oninput="moveNext(this, 3)">
-                <input type="text" class="otp-input" maxlength="1" oninput="moveNext(this, 4)">
-            </div>
-        </div>
-        <button class="btn-gojek" onclick="verifikasiDanMasuk()">Konfirmasi & Masuk</button>
-    </div>
+    <script>
+        let map, polylineRoute, markerJemput, markerAntar;
+        let koordinatJemput = null, koordinatAntar = null;
 
-</div>
+        const LAT_JAKARTA = -6.2088;
+        const LON_JAKARTA = 106.8456;
 
-<script>
-    let roleTerpilih = "";
-    let nomorHPTerpilih = "";
+        function initMap() {
+            // Gambar peta dasar Google Maps tetap muncul walau ada watermark demo
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 13,
+                center: { lat: LAT_JAKARTA, lng: LON_JAKARTA },
+                disableDefaultUI: true,
+                zoomControl: true
+            });
 
-    function gantiScreen(screenId) {
-        // Sembunyikan semua screen
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        // Tampilkan screen yang dituju
-        document.getElementById(screenId).classList.add('active');
-    }
+            setupAutocomplete('input-jemput', 'suggest-jemput', (lat, lng, name) => {
+                koordinatJemput = { lat, lng };
+                setCustomMarker('jemput', koordinatJemput);
+                hitungRuteDanTarif();
+            });
 
-    function lanjutKePhone() {
-        roleTerpilih = document.getElementById('user-role').value;
-        gantiScreen('screen-phone');
-    }
-
-    function kembaliKeRole() {
-        gantiScreen('screen-role');
-    }
-
-    function lanjutKeOTP() {
-        nomorHPTerpilih = document.getElementById('user-phone').value;
-        if(!nomorHPTerpilih) return alert("Nomor HP tidak boleh kosong!");
-        gantiScreen('screen-otp');
-    }
-
-    function kembaliKePhone() {
-        gantiScreen('screen-phone');
-    }
-
-    // Fungsi otomatis pindah kotak input OTP saat diketik
-    function moveNext(current, index) {
-        if(current.value.length >= 1 && index < 4) {
-            document.querySelectorAll('.otp-input')[index].focus();
+            setupAutocomplete('input-antar', 'suggest-antar', (lat, lng, name) => {
+                koordinatAntar = { lat, lng };
+                setCustomMarker('antar', koordinatAntar);
+                hitungRuteDanTarif();
+            });
         }
-    }
 
-    function verifikasiDanMasuk() {
-        // Simulasi Frontend: langsung lempar ke file dashboard berdasarkan role yang dipilih
-        alert(`Frontend Sukses!\nMasuk sebagai: ${roleTerpilih}\nNo HP: ${nomorHPTerpilih}`);
-        window.location.href = roleTerpilih + ".html"; 
-    }
-</script>
+        // Fitur Autocomplete Anti-Error & Sangat Lengkap (Menggunakan API Publik)
+        function setupAutocomplete(inputId, suggestId, onSelect) {
+            const input = document.getElementById(inputId);
+            const suggestBox = document.getElementById(suggestId);
+
+            input.addEventListener('input', debounce(function() {
+                const query = input.value;
+                if (query.length < 3) { suggestBox.classList.add('hidden'); return; }
+
+                // Mencari tempat se-Indonesia yang sangat lengkap
+                fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&lat=${LAT_JAKARTA}&lon=${LON_JAKARTA}&limit=5`)
+                .then(res => res.json())
+                .then(data => {
+                    suggestBox.innerHTML = '';
+                    if(!data.features || data.features.length === 0) { suggestBox.classList.add('hidden'); return; }
+
+                    data.features.forEach(feat => {
+                        const props = feat.properties;
+                        const namaUtama = props.name || props.street || 'Lokasi Terpilih';
+                        const detail = [props.street, props.district, props.city].filter(Boolean).slice(0, 2).join(', ');
+
+                        const item = document.createElement('div');
+                        item.className = 'p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 flex items-start space-x-3 text-left';
+                        item.innerHTML = `
+                            <i class="fa-solid fa-location-dot text-gray-400 mt-1 text-xs flex-shrink-0"></i> 
+                            <div class="truncate">
+                                <p class="text-gray-800 font-semibold text-xs truncate">${namaUtama}</p>
+                                <p class="text-gray-400 text-[10px] truncate">${detail || 'Indonesia'}</p>
+                            </div>
+                        `;
+                        
+                        item.addEventListener('click', () => {
+                            input.value = namaUtama;
+                            suggestBox.classList.add('hidden');
+                            // Koordinat dari API ini terbalik [lon, lat], kita balik menjadi [lat, lon]
+                            const lng = feat.geometry.coordinates[0];
+                            const lat = feat.geometry.coordinates[1];
+                            onSelect(lat, lng, namaUtama);
+                        });
+                        suggestBox.appendChild(item);
+                    });
+                    suggestBox.classList.remove('hidden');
+                });
+            }, 400));
+
+            document.addEventListener('click', (e) => {
+                if (!input.contains(e.target) && !suggestBox.contains(e.target)) {
+                    suggestBox.classList.add('hidden');
+                }
+            });
+        }
+
+        function setCustomMarker(tipe, koordinat) {
+            if (tipe === 'jemput') {
+                if (markerJemput) markerJemput.setMap(null);
+                markerJemput = new google.maps.Marker({
+                    position: koordinat,
+                    map: map,
+                    icon: { url: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png' }
+                });
+            } else {
+                if (markerAntar) markerAntar.setMap(null);
+                markerAntar = new google.maps.Marker({
+                    position: koordinat,
+                    map: map,
+                    icon: { url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png' }
+                });
+            }
+            map.setCenter(koordinat);
+            map.setZoom(14);
+        }
+
+        function hitungRuteDanTarif() {
+            if (!koordinatJemput || !koordinatAntar) return;
+
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('panel-tarif').classList.add('hidden');
+            if (polylineRoute) polylineRoute.setMap(null);
+
+            // Menggunakan API Router Jalanan Alternatif agar bebas hambatan
+            fetch(`https://router.project-osrm.org/route/v1/driving/${koordinatJemput.lng},${koordinatJemput.lat};${koordinatAntar.lng},${koordinatAntar.lat}?overview=full&geometries=geojson`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('loading').classList.add('hidden');
+                if(!data.routes || data.routes.length === 0) return;
+
+                const rute = data.routes[0];
+                const koordinatGaris = rute.geometry.coordinates.map(c => ({ lat: c[1], lng: c[0] }));
+
+                // Gambar Garis Rute Hijau Tebal khas Grab di Atas Google Maps!
+                polylineRoute = new google.maps.Polyline({
+                    path: koordinatGaris,
+                    geodesic: true,
+                    strokeColor: '#00B14F',
+                    strokeOpacity: 0.9,
+                    strokeWeight: 6,
+                    map: map
+                });
+
+                // Zoom otomatis agar rute terlihat utuh
+                const bounds = new google.maps.LatLngBounds();
+                koordinatGaris.forEach(p => bounds.extend(p));
+                map.fitBounds(bounds);
+
+                // Hitung Jarak & Tarif Realistis
+                const jarakKm = rute.distance / 1000;
+                let tarif = Math.round(jarakKm * 3500);
+                if (tarif < 10000) tarif = 10000;
+
+                document.getElementById('text-jarak').innerText = `${jarakKm.toFixed(1)} km`;
+                document.getElementById('text-harga').innerText = `Rp ${tarif.toLocaleString('id-ID')}`;
+                document.getElementById('panel-tarif').classList.remove('hidden');
+            })
+            .catch(() => { document.getElementById('loading').classList.add('hidden'); });
+        }
+
+        function debounce(func, delay) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+    </script>
 </body>
 </html>
